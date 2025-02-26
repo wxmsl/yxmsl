@@ -90,7 +90,7 @@
     
     <div class="container">
         <div class="row">
-            <select id="baseCurrency"></select>
+            <select id="baseCurrency" onchange="updateAll()"></select>
             <input type="number" id="amount" class="amount-input" value="1" step="0.01">
         </div>
         <div id="currencyList"></div>
@@ -107,7 +107,7 @@
         const API_URL = 'https://api.exchangerate-api.com/v4/latest/USD';
         let rates = {};
         let currencies = ['CNY', 'HKD', 'USD', 'EUR', 'GBP', 'NGN']; // 默认显示货币
-const CURRENCY_INFO = {
+        const CURRENCY_INFO = {
     AED: { symbol: 'د.إ', flag: '🇦🇪' }, // 阿联酋
     AFN: { symbol: '؋', flag: '🇦🇫' }, // 阿富汗
     ALL: { symbol: 'Lek', flag: '🇦🇱' }, // 阿尔巴尼亚
@@ -276,15 +276,15 @@ const CURRENCY_INFO = {
 };
 
 
-async function init() {
-    const response = await fetch(API_URL);
-    const data = await response.json();
-    rates = data.rates;
-    populateBaseCurrency();
-    populateAddCurrency();
-    updateAll();
-    document.getElementById('amount').addEventListener('input', updateAll);  // 添加实时更新的事件监听
-}
+        async function init() {
+            const response = await fetch(API_URL);
+            const data = await response.json();
+            rates = data.rates;
+            populateBaseCurrency();
+            populateAddCurrency();
+            updateAll();
+            document.getElementById('amount').addEventListener('input', updateAll);  // 添加实时更新的事件监听
+        }
 
         function populateBaseCurrency() {
             const select = document.getElementById('baseCurrency');
@@ -321,13 +321,13 @@ async function init() {
 
             document.getElementById('currencyList').innerHTML = currencies
                 .map(code => {
-                    const rate = rates[code] || 0;
+                    const rate = rates[code] / rates[baseCurrency]; // 根据基础货币计算汇率
                     const convertedAmount = (rate * amount).toFixed(2);
                     return `
                         <div class="row">
                             <div class="currency-code">${CURRENCY_INFO[code]?.flag || '🌍'} ${code}</div>
                             <div>${CURRENCY_INFO[code]?.symbol || ''} ${convertedAmount}</div>
-                            <div class="rate">1 ${baseCurrency} = ${rate} ${code}</div>
+                            <div class="rate">1 ${baseCurrency} = ${rate.toFixed(4)} ${code}</div>
                         </div>
                     `;
                 }).join('');
@@ -342,7 +342,7 @@ async function init() {
         }
 
         function reset() {
-            currencies = ['CNY', 'HKD', 'USD', 'EUR', 'GBP', 'JPY']; // 重置为默认货币
+            currencies = ['CNY', 'HKD', 'USD', 'EUR', 'GBP', 'NGN']; // 重置为默认货币
             document.getElementById('baseCurrency').value = 'USD'; // 重置基础货币
             document.getElementById('amount').value = 1; // 重置金额
             updateAll();
