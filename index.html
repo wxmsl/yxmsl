@@ -270,15 +270,15 @@ const CURRENCY_INFO = {
 };
 
 
-        async function init() {
-            const response = await fetch(API_URL);
-            const data = await response.json();
-            rates = data.rates;
-            populateBaseCurrency();
-            populateAddCurrency();
-            updateAll();
-            document.getElementById('amount').addEventListener('input', updateAll);
-        }
+async function init() {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    rates = data.rates;
+    populateBaseCurrency();
+    populateAddCurrency();
+    updateAll();
+    document.getElementById('amount').addEventListener('input', updateAll);  // 添加实时更新的事件监听
+}
 
         function populateBaseCurrency() {
             const select = document.getElementById('baseCurrency');
