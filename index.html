@@ -277,6 +277,7 @@ const CURRENCY_INFO = {
             populateBaseCurrency();
             populateAddCurrency();
             updateAll();
+            document.getElementById('amount').addEventListener('input', updateAll);
         }
 
         function populateBaseCurrency() {
