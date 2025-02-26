@@ -322,7 +322,10 @@
             const amount = parseFloat(document.getElementById('amount').value);
             const baseCurrency = document.getElementById('baseCurrency').value;
 
-            document.getElementById('currencyList').innerHTML = currencies
+            // 过滤掉基础货币
+            const filteredCurrencies = currencies.filter(code => code !== baseCurrency);
+
+            document.getElementById('currencyList').innerHTML = filteredCurrencies
                 .map(code => {
                     const rate = rates[code] / rates[baseCurrency]; // 根据基础货币计算汇率
                     const convertedAmount = (rate * amount).toFixed(2);
@@ -345,7 +348,7 @@
         }
 
         function reset() {
-            currencies = ['CNY', 'HKD', 'USD', 'EUR', 'GBP', 'NGN']; // 重置为默认货币
+            currencies = ['CNY', 'HKD', 'USD', 'EUR', 'GBP', 'JPY']; // 重置为默认货币
             document.getElementById('baseCurrency').value = 'USD'; // 重置基础货币
             document.getElementById('amount').value = 1; // 重置金额
             updateAll();
